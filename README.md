@@ -1,0 +1,1 @@
+# votecounter_extension
