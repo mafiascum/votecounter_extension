@@ -1,0 +1,15 @@
+services:
+    MathBlade.votecount.votecount_listener:
+        class: MathBlade\votecount\event\votecount_listener
+        arguments:
+            - '@config'
+            - '@language'
+            - '@request'
+            - '@template'
+            - '@user'
+            - '%core.root_path%'
+            - '@dbal.conn'
+            - '%core.php_ext%'
+            - '@cache.driver'
+        tags:
+            - { name: event.listener }
