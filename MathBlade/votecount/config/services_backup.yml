@@ -1,0 +1,5 @@
+services:
+    MathBlade.votecount.votecount_listener:
+        class: MathBlade\votecount\event\votecount_listener
+        tags:
+            - { name: event.listener }

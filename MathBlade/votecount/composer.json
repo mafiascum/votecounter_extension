@@ -1,0 +1,30 @@
+{
+    "name": "MathBlade/votecount",
+    "type": "phpbb-extension",
+    "description": "Math's Votecounter Extension for phpBB 3.2",
+    "version": "0.1.0",
+    "time": "2019-01-19",
+    "keywords": ["phpbb", "extension", "MathBlade", "votecount"],
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "MathBlade",
+            "email": "mtitusmath@hotmail.com",
+            "homepage": "https://github.com/MathBlade/",
+            "role": "VoteCounter Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "composer/installers": "~1.0"
+    },
+    "require-dev": {
+        "phpbb/epv": "dev-master"
+    },
+    "extra": {
+        "display-name": "MathBlade's VoteCounter Extension",
+        "soft-require": {
+            "phpbb/phpbb": "~3.2"
+        }
+    }
+}
