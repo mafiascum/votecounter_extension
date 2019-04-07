@@ -1,6 +1,6 @@
 <?php
 
-namespace MathBlade\votecount\dataclasses;
+namespace mafiascum\votecounter_extension\dataclasses;
 
 class votecountSettings {
 
@@ -116,7 +116,7 @@ class votecountSettings {
 
     private static function get_default_prod_timer()
     {
-      return new \MathBlade\votecount\dataclasses\prodtimer(2,0,0,0);
+      return new \mafiascum\votecounter_extension\dataclasses\prodtimer(2,0,0,0);
 
     }
 
@@ -174,7 +174,7 @@ class votecountSettings {
             if ($cachedDictionary == false)
             {
 
-                $builtDictionary = \MathBlade\votecount\helper\static_functions::build_word_dictionary($homeDir);
+                $builtDictionary = \mafiascum\votecounter_extension\helper\static_functions::build_word_dictionary($homeDir);
                 if ($this->cache != null)
                 {
                   $this->cache->put('wordDictionary', $builtDictionary);
@@ -233,7 +233,7 @@ class votecountSettings {
                             $this->resurrectedPlayers = array();
                             break;
                         case votecountSettings::LYLO_OR_MYLO_NUMBERS_PROMPT:
-                            $this->lyloOrMyloArray = \MathBlade\votecount\dataclasses\lyloOrMylo::build_initial_array();
+                            $this->lyloOrMyloArray = \mafiascum\votecounter_extension\dataclasses\lyloOrMylo::build_initial_array();
                             break;
                         case votecountSettings::PLAYER_MODIFIER_ARRAY_PROMPT:
                             $this->playerModifierArray = array();
@@ -250,11 +250,11 @@ class votecountSettings {
                       switch($promptData[0])
                       {
                           case votecountSettings::PLAYER_TEXT_PROMPT:
-                            $this->assign_value_and_handle_errors($this->players, $errorArray, \MathBlade\votecount\dataclasses\player::instantiate_players($dictionary,$db,$promptData[1]), $promptData[0]);
+                            $this->assign_value_and_handle_errors($this->players, $errorArray, \mafiascum\votecounter_extension\dataclasses\player::instantiate_players($dictionary,$db,$promptData[1]), $promptData[0]);
 
                             break;
                           case votecountSettings::REPLACEMENTS_LIST_PROMPT:
-                            $this->assign_value_and_handle_errors($this->replacementList, $errorArray, \MathBlade\votecount\dataclasses\replacement::instantiate_replacements($dictionary,$db,$this->players,$promptData[1]), $promptData[0]);
+                            $this->assign_value_and_handle_errors($this->replacementList, $errorArray, \mafiascum\votecounter_extension\dataclasses\replacement::instantiate_replacements($dictionary,$db,$this->players,$promptData[1]), $promptData[0]);
                             break;
                           case votecountSettings::MOD_LIST_PROMPT:
                             $this->assign_value_and_handle_errors($this->moderatorList, $errorArray, $this->build_moderator_names($db,$promptData[1]), $promptData[0]);
@@ -328,7 +328,7 @@ class votecountSettings {
           return array($string, '$playerModifierList has no entries');
       }
       $playerSettingsModifierArray = array();
-      $validModifiers = \MathBlade\votecount\dataclasses\playerModifier::all_valid_modifiers();
+      $validModifiers = \mafiascum\votecounter_extension\dataclasses\playerModifier::all_valid_modifiers();
       foreach($list as $potentialModifierString)
       {
         $playerModifierArray = explode("-", trim($potentialModifierString));
@@ -342,7 +342,7 @@ class votecountSettings {
           $modifierPostNumber = $playerModifierArray[2];
           $modifierValue = $playerModifierArray[3];
 
-          $playerReference = \MathBlade\votecount\helper\static_functions::get_player_exact_reference($players,$nameString);
+          $playerReference = \mafiascum\votecounter_extension\helper\static_functions::get_player_exact_reference($players,$nameString);
           if ($playerReference == null)
           {
               $errorString = $errorString . $nameString . ' is not a valid player. Please check for typos.';
@@ -370,7 +370,7 @@ class votecountSettings {
 
               switch($thisModifierType)
               {
-                  case \MathBlade\votecount\dataclasses\playerModifier::BOOL_PLAYER_MODIFIER_TYPE_INT:
+                  case \mafiascum\votecounter_extension\dataclasses\playerModifier::BOOL_PLAYER_MODIFIER_TYPE_INT:
                     $validBool = votecountSettings::checkIsBool($modifierValue);
                     if (!$validBool)
                     {
@@ -378,7 +378,7 @@ class votecountSettings {
                     }
                     break;
                   //This string has no validation yet.
-                  case \MathBlade\votecount\dataclasses\playerModifier::BOOL_PLAYER_MODIFIER_TYPE_INT:
+                  case \mafiascum\votecounter_extension\dataclasses\playerModifier::BOOL_PLAYER_MODIFIER_TYPE_INT:
                     break;
                   default:
                     $errorString = $errorString . $modifierName . ' does not have a valid modifier type. Was given: ' . $thisModifierType . ' Please check for typos.';
@@ -416,7 +416,7 @@ class votecountSettings {
       }
       $failedList = array();
       $cleanedList = array();
-      $lyloPosts = \MathBlade\votecount\dataclasses\lyloOrMylo::build_initial_array();
+      $lyloPosts = \mafiascum\votecounter_extension\dataclasses\lyloOrMylo::build_initial_array();
 
       foreach($list as $potentialLyloString)
       {
@@ -445,7 +445,7 @@ class votecountSettings {
               return array($potentialLyloString, $errorString);
           }
           else {
-              array_push($lyloPosts, new \MathBlade\votecount\dataclasses\lyloOrMylo($postNumber,$isLylo));
+              array_push($lyloPosts, new \mafiascum\votecounter_extension\dataclasses\lyloOrMylo($postNumber,$isLylo));
           }
         }
       }
@@ -486,14 +486,14 @@ class votecountSettings {
           return array($prodTimerString, $prodTimerString . ' was not formatted correctly. It is #,#,#,# formatted for days,hours,minutes,seconds and # is a number.');
         }
         else {
-          return array(new \MathBlade\votecount\dataclasses\prodtimer($prodTimerArray[0],$prodTImerArray[1],$prodTImerArray[2],$prodTimerArray[3]));
+          return array(new \mafiascum\votecounter_extension\dataclasses\prodtimer($prodTimerArray[0],$prodTImerArray[1],$prodTImerArray[2],$prodTimerArray[3]));
         }
     }
 
 
     private function check_string_cleanliness_or_comma($string)
     {
-      if (\MathBlade\votecount\helper\static_functions::string_is_clean_or_comma(trim($string)))
+      if (\mafiascum\votecounter_extension\helper\static_functions::string_is_clean_or_comma(trim($string)))
       {
           return array($string);
       }
@@ -504,7 +504,7 @@ class votecountSettings {
 
     private function check_string_cleanliness($string)
     {
-      if (\MathBlade\votecount\helper\static_functions::string_is_clean(trim($string)))
+      if (\mafiascum\votecounter_extension\helper\static_functions::string_is_clean(trim($string)))
       {
           return array($string);
       }
@@ -546,7 +546,7 @@ class votecountSettings {
 
                       $errorString = '';
 
-                      $playerReference = \MathBlade\votecount\helper\static_functions::get_player_reference($players,$nameString);
+                      $playerReference = \mafiascum\votecounter_extension\helper\static_functions::get_player_reference($players,$nameString);
                       if ($playerReference == null)
                       {
                           $errorString = $nameString . ' is not a valid player. Please check for typos.';
@@ -563,7 +563,7 @@ class votecountSettings {
                       }
                       else {
 
-                          array_push($nightKills, new \MathBlade\votecount\dataclasses\nightkill($playerReference,$nightDied,trim($potentialNKString)));
+                          array_push($nightKills, new \mafiascum\votecounter_extension\dataclasses\nightkill($playerReference,$nightDied,trim($potentialNKString)));
                       }
 
                   }
@@ -608,7 +608,7 @@ class votecountSettings {
                     $postNumber = $stringArray[1];
                     $errorString = '';
 
-                    $playerReference = \MathBlade\votecount\helper\static_functions::get_player_reference($players,$nameString);
+                    $playerReference = \mafiascum\votecounter_extension\helper\static_functions::get_player_reference($players,$nameString);
                     if ($playerReference == null)
                     {
                         $errorString = $nameString . ' is not a valid player. Please check for typos.';
@@ -640,7 +640,7 @@ class votecountSettings {
     private function parse_resurrected_list_string(&$players, $resurrectedListString)
     {
 
-      return $this->parse_player_post_list_string($players,\MathBlade\votecount\dataclasses\resurrection::class,$resurrectedListString);
+      return $this->parse_player_post_list_string($players,\mafiascum\votecounter_extension\dataclasses\resurrection::class,$resurrectedListString);
 
     }
 
@@ -648,14 +648,14 @@ class votecountSettings {
     private function parse_dayvigged_list_string(&$players, $dayviggedListString)
     {
 
-        return $this->parse_player_post_list_string($players,\MathBlade\votecount\dataclasses\dayvig::class,$dayviggedListString);
+        return $this->parse_player_post_list_string($players,\mafiascum\votecounter_extension\dataclasses\dayvig::class,$dayviggedListString);
 
     }
 
     private function parse_modkilled_list_string(&$players, $modkilledListString)
     {
 
-        return $this->parse_player_post_list_string($players,\MathBlade\votecount\dataclasses\modkill::class,$modkilledListString);
+        return $this->parse_player_post_list_string($players,\mafiascum\votecounter_extension\dataclasses\modkill::class,$modkilledListString);
 
     }
 
@@ -711,7 +711,7 @@ class votecountSettings {
             $modArray = explode(',', $modString);
             foreach($modArray as $mod)
             {
-                if (\MathBlade\votecount\helper\static_functions::string_is_clean($mod) && \MathBlade\votecount\helper\static_functions::is_valid_user($db,$mod))
+                if (\mafiascum\votecounter_extension\helper\static_functions::string_is_clean($mod) && \mafiascum\votecounter_extension\helper\static_functions::is_valid_user($db,$mod))
                 {
                     continue;
                 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace MathBlade\votecount\dataclasses;
+namespace mafiascum\votecounter_extension\dataclasses;
 
 class Vote {
 
@@ -88,7 +88,7 @@ class Vote {
 
     public static function sortVotesByPostNumber(&$votes)
     {
-      usort($votes, ['MathBlade\votecount\dataclasses\Vote', 'sortByPostNumber']);
+      usort($votes, ['mafiascum\votecounter_extension\dataclasses\Vote', 'sortByPostNumber']);
     }
 
 

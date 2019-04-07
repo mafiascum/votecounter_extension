@@ -1,6 +1,6 @@
 <?php
 
-namespace MathBlade\votecount\dataclasses;
+namespace mafiascum\votecounter_extension\dataclasses;
 
 class Wagon {
 
@@ -19,7 +19,7 @@ class Wagon {
 
     public static function NO_LYNCH_PLAYER()
     {
-        return new \MathBlade\votecount\dataclasses\player(Wagon::$NO_LYNCH_STRING,null,null,null,false,false,false);
+        return new \mafiascum\votecounter_extension\dataclasses\player(Wagon::$NO_LYNCH_STRING,null,null,null,false,false,false);
     }
 
     public function getPostNumbers()
@@ -88,7 +88,7 @@ class Wagon {
     public static function sortWagons(&$wagons)
     {
 
-        usort($wagons,['MathBlade\votecount\dataclasses\Wagon', 'compareWagons']);
+        usort($wagons,['mafiascum\votecounter_extension\dataclasses\Wagon', 'compareWagons']);
 
         return $wagons;
     }

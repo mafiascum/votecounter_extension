@@ -1,6 +1,6 @@
 <?php
 
-namespace MathBlade\votecount\dataclasses;
+namespace mafiascum\votecounter_extension\dataclasses;
 
 class lyloOrMylo {
 
@@ -43,7 +43,7 @@ class lyloOrMylo {
           }
 
           $isLyloOrMylo = false;
-          usort($lyloOrMyloArray,['MathBlade\votecount\dataclasses\lyloOrMylo', 'compareLyloMylos']);
+          usort($lyloOrMyloArray,['mafiascum\votecounter_extension\dataclasses\lyloOrMylo', 'compareLyloMylos']);
           foreach($lyloOrMyloArray as $lyloOrMylo)
           {
               if ($lyloOrMylo->getPostNumber() < $postNumber)

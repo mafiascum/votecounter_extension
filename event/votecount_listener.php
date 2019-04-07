@@ -1,10 +1,35 @@
 <?php
 
-namespace MathBlade\votecount\event;
+namespace mafiascum\votecounter_extension\event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-$phpbb_root_path = '.';
+//$phpbb_root_path = '.';
+
+//This is required because sometimes this gets called from root/adm and root and the PHPBB_ROOT_PATH for the board changes for both. Rather than modify how that Works
+//I built a complicated if statement. Should only be required here as this is the only file that has to interact all over as it is a listener.
+$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './../';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
-require_once($phpbb_root_path . '/ext/MathBlade/votecount/logic/main_logic.' . $phpEx);
+$pathToMainLogicFile = '/ext/mafiascum/votecounter_extension/logic/main_logic.';
+$mainLogicPHPFile = $phpbb_root_path . $pathToMainLogicFile . $phpEx;
+if (file_exists($mainLogicPHPFile))
+{
+  require_once($mainLogicPHPFile);
+}
+else {
+  $phpbb_root_path = './..';
+  $mainLogicPHPFile = $phpbb_root_path . $pathToMainLogicFile . $phpEx;
+  if (file_exists($mainLogicPHPFile))
+  {
+    require_once($mainLogicPHPFile);
+  }
+  else {
+    $phpbb_root_path = '.';
+    $mainLogicPHPFile = $phpbb_root_path . $pathToMainLogicFile . $phpEx;
+    if (file_exists($mainLogicPHPFile))
+    {
+      require_once($mainLogicPHPFile);
+    }
+  }
+}
 
 use s9e\TextFormatter\Bundles;
 
@@ -77,9 +102,9 @@ class votecount_listener implements EventSubscriberInterface
 
         $startText =  $event['text'];
 
-      
+
         $finalString = $startText;
-        $votecountOutput = \MathBlade\votecount\logic\MainLogic::get_votecount_string($this->cache,$this->phpbb_root_path,$this->db, $this->user, $this->request);
+        $votecountOutput = \mafiascum\votecounter_extension\logic\MainLogic::get_votecount_string($this->cache,$this->phpbb_root_path,$this->db, $this->user, $this->request);
         $replacement = '[votecount]'. $votecountOutput . '[/votecount]';
         $finalString =  preg_replace('/\[votecount](.*)\[\/votecount]/', $replacement, $finalString);
         $replacement = '[votecountBBCode][code]'. $votecountOutput . '[/code][/votecountBBCode]';

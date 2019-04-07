@@ -1,6 +1,6 @@
 <?php
 
-namespace MathBlade\votecount\dataclasses;
+namespace mafiascum\votecounter_extension\dataclasses;
 
 class Day {
 
@@ -113,7 +113,7 @@ class Day {
       }
       else
       {
-        $currentDay = new \MathBlade\votecount\dataclasses\Day(1,0,$lastPostNumber);
+        $currentDay = new \mafiascum\votecounter_extension\dataclasses\Day(1,0,$lastPostNumber);
         $currentDayPostNumber = 0;
         $isLastDay = true;
       }
