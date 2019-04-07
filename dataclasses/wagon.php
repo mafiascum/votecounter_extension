@@ -1,6 +1,7 @@
 <?php
 
 namespace mafiascum\votecounter_extension\dataclasses;
+use mafiascum\votecounter_extension\dataclasses\player as Player;
 
 class Wagon {
 
@@ -19,7 +20,7 @@ class Wagon {
 
     public static function NO_LYNCH_PLAYER()
     {
-        return new \mafiascum\votecounter_extension\dataclasses\player(Wagon::$NO_LYNCH_STRING,null,null,null,false,false,false);
+        return new player(Wagon::$NO_LYNCH_STRING,null,null,null,false,false,false);
     }
 
     public function getPostNumbers()

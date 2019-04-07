@@ -113,7 +113,7 @@ class Day {
       }
       else
       {
-        $currentDay = new \mafiascum\votecounter_extension\dataclasses\Day(1,0,$lastPostNumber);
+        $currentDay = new Day(1,0,$lastPostNumber);
         $currentDayPostNumber = 0;
         $isLastDay = true;
       }

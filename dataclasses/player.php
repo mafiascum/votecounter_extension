@@ -2,6 +2,9 @@
 
 namespace mafiascum\votecounter_extension\dataclasses;
 
+
+use \mafiascum\votecounter_extension\dataclasses\playerModifier as playerModifier;
+
 class player {
 
 
@@ -40,7 +43,7 @@ class player {
         $this->updateFriendlyNicknames();
         $this->abbreviations = $abbreviations;
         $this->wordsInName = $words;
-        $this->playerModifiers = \mafiascum\votecounter_extension\dataclasses\playerModifier::all_valid_modifiers();
+        $this->playerModifiers = playerModifier::all_valid_modifiers();
 
 
         $this->isAlive = true;
@@ -91,22 +94,21 @@ class player {
     public function isLoved($currentPostNumber,$isLyloOrMylo)
     {
 
-      //echo $this->getName() . "IS LOVED: " . $this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::LOVED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo) . "<br/>";
+      //echo $this->getName() . "IS LOVED: " . $this->getValueForModifier(playerModifier::LOVED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo) . "<br/>";
 
-        return filter_var($this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::LOVED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo), FILTER_VALIDATE_BOOLEAN);
+        return filter_var($this->getValueForModifier(playerModifier::LOVED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo), FILTER_VALIDATE_BOOLEAN);
 
     }
 
     public function isHated($currentPostNumber,$isLyloOrMylo)
     {
-      //  echo $this->getName() . "IS HATED: " . $this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::HATED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo) . "<br/>";
-        return filter_var($this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::HATED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo),FILTER_VALIDATE_BOOLEAN);
+      return filter_var($this->getValueForModifier(playerModifier::HATED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo),FILTER_VALIDATE_BOOLEAN);
     }
 
     public function isTreestump($currentPostNumber,$isLyloOrMylo)
     {
 
-      return filter_var($this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::TREESTUMP_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo),FILTER_VALIDATE_BOOLEAN);
+      return filter_var($this->getValueForModifier(playerModifier::TREESTUMP_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo),FILTER_VALIDATE_BOOLEAN);
     }
 
 
@@ -480,7 +482,7 @@ class player {
         }
 
         if ($abbreviation != null && strlen($abbreviation) > 0)
-        {            
+        {
             array_push($abbreviations, $abbreviation);
         }
 

@@ -7,7 +7,12 @@ if (!defined('IN_PHPBB'))
 	define('IN_PHPBB', true);
 }
 
-//require_once($phpbb_root_path . '/ext/mafiascum/votecounter_extension/dataclasses/post.' . $phpEx);
+use mafiascum\votecounter_extension\dataclasses\Post as Post;
+use mafiascum\votecounter_extension\dataclasses\votecountSettings as votecountSettings;
+use mafiascum\votecounter_extension\helper\static_functions as static_functions;
+use mafiascum\votecounter_extension\dataclasses\Day as Day;
+use mafiascum\votecounter_extension\dataclasses\VoteCount as VoteCount;
+use mafiascum\votecounter_extension\dataclasses\Wagon as Wagon;
 
 class MainLogic
 {
@@ -30,12 +35,12 @@ class MainLogic
 
               $settingString = $post->getVoteCountSettingsString();
 
-              if ($settingString == \mafiascum\votecounter_extension\dataclasses\Post::NO_SETTINGS_ERROR)
+              if ($settingString == Post::NO_SETTINGS_ERROR)
               {
-                return \mafiascum\votecounter_extension\dataclasses\Post::NO_SETTINGS_ERROR;
+                return Post::NO_SETTINGS_ERROR;
               }
               else {
-                $settings = new \mafiascum\votecounter_extension\dataclasses\votecountSettings($cache,$homeDir,$db,$settingString);
+                $settings = new votecountSettings($cache,$homeDir,$db,$settingString);
                 $settingsErrorArray = $settings->getErrorArray();
 
                 if (count($settingsErrorArray) > 0)
@@ -131,7 +136,7 @@ class MainLogic
               continue;
             }
 
-            $directPlayer = \mafiascum\votecounter_extension\helper\static_functions::get_player_exact_reference($players,$author);
+            $directPlayer = static_functions::get_player_exact_reference($players,$author);
             if ($directPlayer != null)
             {
                 $directPlayer->addPostNumber($postNumber);
@@ -139,7 +144,7 @@ class MainLogic
 
             }
             else {
-              $replacement = \mafiascum\votecounter_extension\helper\static_functions::get_player_reference_replacements($replacements,$author,$postNumber);
+              $replacement = static_functions::get_player_reference_replacements($replacements,$author,$postNumber);
             }
         }
 
@@ -174,19 +179,6 @@ class MainLogic
 
         }
 
-        /*foreach($players as $player)
-        {
-            echo "PLAYERNAME: " . $player->getName() . "<br/>";
-            foreach($player->getModifiers() as $modifier)
-            {
-              echo "MODIFIER: " . $modifier->getName() . " - " .  implode(",", $modifier->getValueArray()) . "<br/>";
-            }
-            echo "PLAYERNAME: " . $player->getName() . " IS HATED: " .  \mafiascum\votecounter_extension\helper\static_functions::display_bool_value($player->IsHated(1,false)) . " IS LOVED: " .  \mafiascum\votecounter_extension\helper\static_functions::display_bool_value($player->IsLoved(1,false)) . "<br/>";
-           //echo "PLAYERNAME: " . $player->getName() . " IS HATED: " . $player->IsHated(1,false) . " IS LOVED: " . $player->IsLoved(1,false) . "<br/>";
-        }*/
-
-
-
 
         $dayNumber = 1;
         $days = array();
@@ -204,12 +196,12 @@ class MainLogic
             if ($dayStartNumber <= $lastPostNumber)
             {
 
-                array_push($days, new \mafiascum\votecounter_extension\dataclasses\Day($dayNumber,$dayStartNumber,$dayEndsOn));
+                array_push($days, new Day($dayNumber,$dayStartNumber,$dayEndsOn));
                 $dayNumber = $dayNumber + 1;
             }
         }
 
-        $votecounts = \mafiascum\votecounter_extension\dataclasses\VoteCount::build_all_vote_counts($lastPostNumber,$votes,$players,$replacements,$moderatorList,$days,$isLyloOrMyloArray,$deadList,$resurrectedList,$deadline,$color,$fontOverride,$prodTimer,$dayviggedList,$modkilledList);
+        $votecounts = VoteCount::build_all_vote_counts($lastPostNumber,$votes,$players,$replacements,$moderatorList,$days,$isLyloOrMyloArray,$deadList,$resurrectedList,$deadline,$color,$fontOverride,$prodTimer,$dayviggedList,$modkilledList);
         //If this happened there was an error. $votecounts should be just an array with 1 element. Which is an array of the votecounts.
         if (count($votecounts) > 1)
         {
@@ -307,7 +299,7 @@ class MainLogic
       //Add wagon data here.
       $isFirstWagon = true;
 
-      $sortedWagons = \mafiascum\votecounter_extension\dataclasses\Wagon::sortWagons($lastVotecount->getWagons());
+      $sortedWagons = Wagon::sortWagons($lastVotecount->getWagons());
 
       $lastVotecount->setSortedWagons($sortedWagons);
       for($i=0;$i < count($sortedWagons); $i++)
@@ -459,7 +451,8 @@ class MainLogic
                   $post_date = $r[0];//$user->format_date($r[0]);
                   $post_text = $r[1];
                   $username = $r[2];
-                  $newPost = new \mafiascum\votecounter_extension\dataclasses\Post($i,$post_date,$post_text,$username);
+                  //$newPost = new \mafiascum\votecounter_extension\dataclasses\Post($i,$post_date,$post_text,$username);
+                  $newPost = new Post($i,$post_date,$post_text,$username);
                   array_push($posts, $newPost);
               }
               $db->sql_freeresult($r);
