@@ -88,7 +88,7 @@ class Vote {
 
     public static function sortVotesByPostNumber(&$votes)
     {
-      usort($votes, ['mafiascum\votecounter_extension\dataclasses\Vote', 'sortByPostNumber']);
+      usort($votes, ['\mafiascum\votecounter_extension\dataclasses\Vote', 'sortByPostNumber']);
     }
 
 

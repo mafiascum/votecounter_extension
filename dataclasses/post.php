@@ -3,6 +3,7 @@
 namespace mafiascum\votecounter_extension\dataclasses;
 
 //require_once($phpbb_root_path . '/ext/mafiascum/votecounter_extension/dataclasses/vote.' . $phpEx);
+use mafiascum\votecounter_extension\dataclasses\Vote as Vote;
 
 class Post {
 
@@ -88,7 +89,7 @@ class Post {
       {
 
 
-        $vote = new \mafiascum\votecounter_extension\dataclasses\Vote($this->getId(),$this->username,$match[0],$match[2],$this->post_date);
+        $vote = new Vote($this->getId(),$this->username,$match[0],$match[2],$this->post_date);
         $this->vote = $vote;
       }
 
