@@ -1,6 +1,6 @@
 <?php
 
-namespace MathBlade\votecount\dataclasses;
+namespace mafiascum\votecounter_extension\dataclasses;
 
 class player {
 
@@ -40,7 +40,7 @@ class player {
         $this->updateFriendlyNicknames();
         $this->abbreviations = $abbreviations;
         $this->wordsInName = $words;
-        $this->playerModifiers = \MathBlade\votecount\dataclasses\playerModifier::all_valid_modifiers();
+        $this->playerModifiers = \mafiascum\votecounter_extension\dataclasses\playerModifier::all_valid_modifiers();
 
 
         $this->isAlive = true;
@@ -91,22 +91,22 @@ class player {
     public function isLoved($currentPostNumber,$isLyloOrMylo)
     {
 
-      //echo $this->getName() . "IS LOVED: " . $this->getValueForModifier(\MathBlade\votecount\dataclasses\playerModifier::LOVED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo) . "<br/>";
+      //echo $this->getName() . "IS LOVED: " . $this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::LOVED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo) . "<br/>";
 
-        return filter_var($this->getValueForModifier(\MathBlade\votecount\dataclasses\playerModifier::LOVED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo), FILTER_VALIDATE_BOOLEAN);
+        return filter_var($this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::LOVED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo), FILTER_VALIDATE_BOOLEAN);
 
     }
 
     public function isHated($currentPostNumber,$isLyloOrMylo)
     {
-      //  echo $this->getName() . "IS HATED: " . $this->getValueForModifier(\MathBlade\votecount\dataclasses\playerModifier::HATED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo) . "<br/>";
-        return filter_var($this->getValueForModifier(\MathBlade\votecount\dataclasses\playerModifier::HATED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo),FILTER_VALIDATE_BOOLEAN);
+      //  echo $this->getName() . "IS HATED: " . $this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::HATED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo) . "<br/>";
+        return filter_var($this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::HATED_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo),FILTER_VALIDATE_BOOLEAN);
     }
 
     public function isTreestump($currentPostNumber,$isLyloOrMylo)
     {
 
-      return filter_var($this->getValueForModifier(\MathBlade\votecount\dataclasses\playerModifier::TREESTUMP_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo),FILTER_VALIDATE_BOOLEAN);
+      return filter_var($this->getValueForModifier(\mafiascum\votecounter_extension\dataclasses\playerModifier::TREESTUMP_MODIFIER_NAME,$currentPostNumber,$isLyloOrMylo),FILTER_VALIDATE_BOOLEAN);
     }
 
 
@@ -161,12 +161,12 @@ class player {
 
     private function updateFriendlyName()
     {
-        $this->friendlyPlayerName = \MathBlade\votecount\helper\static_functions::make_friendly($this->playerName);
+        $this->friendlyPlayerName = \mafiascum\votecounter_extension\helper\static_functions::make_friendly($this->playerName);
     }
 
     public function getReplacementAtPostNumber($postNumber)
     {
-        return \MathBlade\votecount\helper\static_functions::get_replacement_by_post_number($this->linkedReplacements,$postNumber);
+        return \mafiascum\votecounter_extension\helper\static_functions::get_replacement_by_post_number($this->linkedReplacements,$postNumber);
     }
 
     public function getLinkedReplacements()
@@ -178,7 +178,7 @@ class player {
 
       if ($this->linkedReplacements != null)
       {
-        $replacementToUse = \MathBlade\votecount\helper\static_functions::get_replacement_by_post_number($this->linkedReplacements,$currentPostNumber);
+        $replacementToUse = \mafiascum\votecounter_extension\helper\static_functions::get_replacement_by_post_number($this->linkedReplacements,$currentPostNumber);
 
         if ($replacementToUse != null)
         {
@@ -251,7 +251,7 @@ class player {
     }
     public function addAbbreviations($abbreviations)
     {
-        \MathBlade\votecount\helper\static_functions::add_all_array_elements_to_array($this->abbreviations, $abbreviations);
+        \mafiascum\votecounter_extension\helper\static_functions::add_all_array_elements_to_array($this->abbreviations, $abbreviations);
     }
 
     public function addNicknames($nicknames)
@@ -260,7 +260,7 @@ class player {
         {
           $this->nicknames = array();
         }
-        \MathBlade\votecount\helper\static_functions::add_all_array_elements_to_array($this->nicknames, $nicknames);
+        \mafiascum\votecounter_extension\helper\static_functions::add_all_array_elements_to_array($this->nicknames, $nicknames);
         $this->updateFriendlyNicknames();
     }
 
@@ -271,7 +271,7 @@ class player {
         {
           foreach($this->nicknames as $uncleanNickname)
           {
-              array_push($cleanedNicknames, \MathBlade\votecount\helper\static_functions::make_friendly($uncleanNickname));
+              array_push($cleanedNicknames, \mafiascum\votecounter_extension\helper\static_functions::make_friendly($uncleanNickname));
           }
         }
         $this->friendlyNicknames = $cleanedNicknames;
@@ -293,7 +293,7 @@ class player {
     }
     public function addWordsInName($words)
     {
-        \MathBlade\votecount\helper\static_functions::add_all_array_elements_to_array($this->wordsInName, $words);
+        \mafiascum\votecounter_extension\helper\static_functions::add_all_array_elements_to_array($this->wordsInName, $words);
     }
 
 
@@ -436,7 +436,7 @@ class player {
           $nicknamesArray = explode("+", $nicknameResult[1]);
           foreach($nicknamesArray as $nickname)
           {
-              if (!\MathBlade\votecount\helper\static_functions::string_is_clean($nickname))
+              if (!\mafiascum\votecounter_extension\helper\static_functions::string_is_clean($nickname))
               {
                 echo $remainingPlayerString . ' has an invalid nickname. ' . $nickname . '<br/>';
                 return array($nickname, $remainingPlayerString . ' has an invalid nickname. ' . $nickname);
@@ -452,11 +452,11 @@ class player {
 
 
 
-      if (!\MathBlade\votecount\helper\static_functions::string_is_clean($remainingPlayerString))
+      if (!\mafiascum\votecounter_extension\helper\static_functions::string_is_clean($remainingPlayerString))
       {
         return array($remainingPlayerString, $remainingPlayerString . ' has an invalid name. This should match the username exactly. Please check it. ');
       }
-      else if ((strlen($remainingPlayerString) > 25) || !(\MathBlade\votecount\helper\static_functions::is_valid_user($db,$remainingPlayerString)))
+      else if ((strlen($remainingPlayerString) > 25) || !(\mafiascum\votecounter_extension\helper\static_functions::is_valid_user($db,$remainingPlayerString)))
       {
         return array($remainingPlayerString, $remainingPlayerString . ' is not a valid user. Please double check your entry.');
       }
@@ -490,7 +490,7 @@ class player {
         }
 
 
-        $wordsInName = \MathBlade\votecount\helper\static_functions::get_words_in_string($dictionary,$remainingPlayerString);
+        $wordsInName = \mafiascum\votecounter_extension\helper\static_functions::get_words_in_string($dictionary,$remainingPlayerString);
 
 
 

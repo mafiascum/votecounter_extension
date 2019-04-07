@@ -1,0 +1,5 @@
+services:
+    mafiascum.votecounter_extension.votecount_listener:
+        class: mafiascum\votecounter_extension\event\votecount_listener
+        tags:
+            - { name: event.listener }

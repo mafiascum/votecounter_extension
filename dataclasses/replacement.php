@@ -1,6 +1,6 @@
 <?php
 
-namespace MathBlade\votecount\dataclasses;
+namespace mafiascum\votecounter_extension\dataclasses;
 
 class replacement {
 
@@ -114,7 +114,7 @@ class replacement {
                     $oldPlayerFromParse = $oldPlayerParsed[0];
                     $newPlayerFromParse = $newPlayerParsed[0];
 
-                    $oldPlayerReference = \MathBlade\votecount\helper\static_functions::get_player_exact_reference($players,$oldPlayerFromParse->getExactName());
+                    $oldPlayerReference = \mafiascum\votecounter_extension\helper\static_functions::get_player_exact_reference($players,$oldPlayerFromParse->getExactName());
 
                     //If we don't have an old player reference then it's a replace of a replace.
                     if ($oldPlayerReference == null)
@@ -122,8 +122,8 @@ class replacement {
 
                       if ($replacements != null)
                       {
-                        //$validReplacement = \MathBlade\votecount\helper\static_functions::get_player_exact_reference($replacements,$oldPlayerFromParse->getExactName(),$postNumberOfReplace);
-                      //$validReplacement = \MathBlade\votecount\helper\static_functions::get_replacement_by_post_number($this->linkedReplacements,$currentPostNumber);
+                        //$validReplacement = \mafiascum\votecounter_extension\helper\static_functions::get_player_exact_reference($replacements,$oldPlayerFromParse->getExactName(),$postNumberOfReplace);
+                      //$validReplacement = \mafiascum\votecounter_extension\helper\static_functions::get_replacement_by_post_number($this->linkedReplacements,$currentPostNumber);
 
                         //Check to find the prior replacements.
                         $potentialReplacements = array();
@@ -143,7 +143,7 @@ class replacement {
                         if ($countReplacements > 0)
                         {
                             //This is intentional to ignore the others.
-                            $oldPlayerReference = \MathBlade\votecount\helper\static_functions::get_original_player($potentialReplacements[0],$players);
+                            $oldPlayerReference = \mafiascum\votecounter_extension\helper\static_functions::get_original_player($potentialReplacements[0],$players);
                             if ($oldPlayerReference == null)
                             {
                               array_push($errorArray, trim('Could not find base player for ' . $replacementString . '. Cannot perform replacement. '));
@@ -157,7 +157,7 @@ class replacement {
                         if ($validReplacement != null)
                         {
                           //$oldPlayerReference = $validReplacement->getBasePlayer();
-                          $oldPlayerReference = \MathBlade\votecount\helper\static_functions::get_player_exact_reference($players,$validReplacement->getOldPlayer()->getExactName());
+                          $oldPlayerReference = \mafiascum\votecounter_extension\helper\static_functions::get_player_exact_reference($players,$validReplacement->getOldPlayer()->getExactName());
 
 
                         }

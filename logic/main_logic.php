@@ -1,8 +1,13 @@
 <?php
 
-namespace MathBlade\votecount\logic;
-define('IN_PHPBB', true);
-//require_once($phpbb_root_path . '/ext/MathBlade/votecount/dataclasses/post.' . $phpEx);
+namespace mafiascum\votecounter_extension\logic;
+
+if (!defined('IN_PHPBB'))
+{
+	define('IN_PHPBB', true);
+}
+
+//require_once($phpbb_root_path . '/ext/mafiascum/votecounter_extension/dataclasses/post.' . $phpEx);
 
 class MainLogic
 {
@@ -25,12 +30,12 @@ class MainLogic
 
               $settingString = $post->getVoteCountSettingsString();
 
-              if ($settingString == \MathBlade\votecount\dataclasses\Post::NO_SETTINGS_ERROR)
+              if ($settingString == \mafiascum\votecounter_extension\dataclasses\Post::NO_SETTINGS_ERROR)
               {
-                return \MathBlade\votecount\dataclasses\Post::NO_SETTINGS_ERROR;
+                return \mafiascum\votecounter_extension\dataclasses\Post::NO_SETTINGS_ERROR;
               }
               else {
-                $settings = new \MathBlade\votecount\dataclasses\votecountSettings($cache,$homeDir,$db,$settingString);
+                $settings = new \mafiascum\votecounter_extension\dataclasses\votecountSettings($cache,$homeDir,$db,$settingString);
                 $settingsErrorArray = $settings->getErrorArray();
 
                 if (count($settingsErrorArray) > 0)
@@ -66,6 +71,7 @@ class MainLogic
 
         $players = $settings->getPlayers();
         $replacements = $settings->getReplacements();
+        $moderatorList = $settings->getModeratorList();
 
         $playersInGame = array();
         foreach($players as $settingPlayer)
@@ -75,11 +81,19 @@ class MainLogic
     		foreach($replacements as $settingReplacement)
     		{
     			$newPlayerName = $settingReplacement->getNewPlayer()->getExactName();
-    			if (!in_array($newPlayerName,$players))
+    			if (!in_array($newPlayerName,$playersInGame))
     			{
     				array_push($playersInGame,$newPlayerName);
     			}
     		}
+        foreach($moderatorList as $moderator)
+        {
+          $newPlayerName = $moderator;
+          if (!in_array($newPlayerName,$playersInGame))
+          {
+            array_push($playersInGame,$newPlayerName);
+          }
+        }
 
         $username = $user->data['username'];
 
@@ -117,7 +131,7 @@ class MainLogic
               continue;
             }
 
-            $directPlayer = \MathBlade\votecount\helper\static_functions::get_player_exact_reference($players,$author);
+            $directPlayer = \mafiascum\votecounter_extension\helper\static_functions::get_player_exact_reference($players,$author);
             if ($directPlayer != null)
             {
                 $directPlayer->addPostNumber($postNumber);
@@ -125,7 +139,7 @@ class MainLogic
 
             }
             else {
-              $replacement = \MathBlade\votecount\helper\static_functions::get_player_reference_replacements($replacements,$author,$postNumber);
+              $replacement = \mafiascum\votecounter_extension\helper\static_functions::get_player_reference_replacements($replacements,$author,$postNumber);
             }
         }
 
@@ -140,7 +154,7 @@ class MainLogic
         $modkilledList = $settings->getModkilledList();
         $isLyloOrMyloArray = $settings->getLyloOrMyloArray();
         $playerModifierArray = $settings->getPlayerModifierArray();
-        $moderatorList = $settings->getModeratorList();
+
 
         //Build playerModifiers
         foreach($playerModifierArray as $playerModifierEntry)
@@ -167,7 +181,7 @@ class MainLogic
             {
               echo "MODIFIER: " . $modifier->getName() . " - " .  implode(",", $modifier->getValueArray()) . "<br/>";
             }
-            echo "PLAYERNAME: " . $player->getName() . " IS HATED: " .  \MathBlade\votecount\helper\static_functions::display_bool_value($player->IsHated(1,false)) . " IS LOVED: " .  \MathBlade\votecount\helper\static_functions::display_bool_value($player->IsLoved(1,false)) . "<br/>";
+            echo "PLAYERNAME: " . $player->getName() . " IS HATED: " .  \mafiascum\votecounter_extension\helper\static_functions::display_bool_value($player->IsHated(1,false)) . " IS LOVED: " .  \mafiascum\votecounter_extension\helper\static_functions::display_bool_value($player->IsLoved(1,false)) . "<br/>";
            //echo "PLAYERNAME: " . $player->getName() . " IS HATED: " . $player->IsHated(1,false) . " IS LOVED: " . $player->IsLoved(1,false) . "<br/>";
         }*/
 
@@ -190,12 +204,12 @@ class MainLogic
             if ($dayStartNumber <= $lastPostNumber)
             {
 
-                array_push($days, new \MathBlade\votecount\dataclasses\Day($dayNumber,$dayStartNumber,$dayEndsOn));
+                array_push($days, new \mafiascum\votecounter_extension\dataclasses\Day($dayNumber,$dayStartNumber,$dayEndsOn));
                 $dayNumber = $dayNumber + 1;
             }
         }
 
-        $votecounts = \MathBlade\votecount\dataclasses\VoteCount::build_all_vote_counts($lastPostNumber,$votes,$players,$replacements,$moderatorList,$days,$isLyloOrMyloArray,$deadList,$resurrectedList,$deadline,$color,$fontOverride,$prodTimer,$dayviggedList,$modkilledList);
+        $votecounts = \mafiascum\votecounter_extension\dataclasses\VoteCount::build_all_vote_counts($lastPostNumber,$votes,$players,$replacements,$moderatorList,$days,$isLyloOrMyloArray,$deadList,$resurrectedList,$deadline,$color,$fontOverride,$prodTimer,$dayviggedList,$modkilledList);
         //If this happened there was an error. $votecounts should be just an array with 1 element. Which is an array of the votecounts.
         if (count($votecounts) > 1)
         {
@@ -293,7 +307,7 @@ class MainLogic
       //Add wagon data here.
       $isFirstWagon = true;
 
-      $sortedWagons = \MathBlade\votecount\dataclasses\Wagon::sortWagons($lastVotecount->getWagons());
+      $sortedWagons = \mafiascum\votecounter_extension\dataclasses\Wagon::sortWagons($lastVotecount->getWagons());
 
       $lastVotecount->setSortedWagons($sortedWagons);
       for($i=0;$i < count($sortedWagons); $i++)
@@ -445,7 +459,7 @@ class MainLogic
                   $post_date = $r[0];//$user->format_date($r[0]);
                   $post_text = $r[1];
                   $username = $r[2];
-                  $newPost = new \MathBlade\votecount\dataclasses\Post($i,$post_date,$post_text,$username);
+                  $newPost = new \mafiascum\votecounter_extension\dataclasses\Post($i,$post_date,$post_text,$username);
                   array_push($posts, $newPost);
               }
               $db->sql_freeresult($r);

@@ -1,6 +1,6 @@
 <?php
 
-namespace MathBlade\votecount\dataclasses;
+namespace mafiascum\votecounter_extension\dataclasses;
 
 class VoteCount {
 
@@ -143,7 +143,7 @@ class VoteCount {
           }
 
           //This one is exact because it comes from database eventually. There should be no typos here.
-          $playerVoting = \MathBlade\votecount\helper\static_functions::get_player_exact_reference($this->players,$playerVotingUserName);
+          $playerVoting = \mafiascum\votecounter_extension\helper\static_functions::get_player_exact_reference($this->players,$playerVotingUserName);
 
           $playerTarget = null;
           $playerVotingIsTreestump = $playerVoting != null ?  $playerVoting->isTreestump($vote->getPostNumber(),$isLyloOrMylo) : true;
@@ -168,7 +168,7 @@ class VoteCount {
           if(!$vote->IsUnvote())
           {
 
-              $playerVoted = \MathBlade\votecount\helper\static_functions::get_player_reference_from_vote($this->players,$this->replacements,$vote->getOriginalInput(), $vote->getPostNumber());
+              $playerVoted = \mafiascum\votecounter_extension\helper\static_functions::get_player_reference_from_vote($this->players,$this->replacements,$vote->getOriginalInput(), $vote->getPostNumber());
 
 
               if ($playerVoted == null)
@@ -244,7 +244,7 @@ class VoteCount {
                       if ($playerTarget != null && $playerTarget->isAlive() && !$playerTarget->isTreestump($vote->getPostNumber(),$isLyloOrMylo))
                       {
 
-                          $createdWagon = new \MathBlade\votecount\dataclasses\Wagon($this->majorityCount);
+                          $createdWagon = new \mafiascum\votecounter_extension\dataclasses\Wagon($this->majorityCount);
 
                           $createdWagon->addVote($vote,$isLyloOrMylo);
                           $playerVoting->setPlayerCurrentlyVoting($playerTarget);
@@ -331,7 +331,7 @@ class VoteCount {
 
     public function updateMajorityCount($postNumber,$isLyloOrMylo)
     {
-      $this->majorityCount = \MathBlade\votecount\dataclasses\player::getMajorityCount($this->playersValidForVotecount, $postNumber,$isLyloOrMylo);
+      $this->majorityCount = \mafiascum\votecounter_extension\dataclasses\player::getMajorityCount($this->playersValidForVotecount, $postNumber,$isLyloOrMylo);
     }
 
     public function getMajorityCount()
@@ -342,12 +342,12 @@ class VoteCount {
     //This is based on the first constructor;
     private function determineFirstLivingPlayers()
     {
-      $this->livingPlayersAtStart = \MathBlade\votecount\dataclasses\player::getPlayersAlive($this->players);
+      $this->livingPlayersAtStart = \mafiascum\votecounter_extension\dataclasses\player::getPlayersAlive($this->players);
     }
 
     private function determineLivingPlayers()
     {
-      $this->livingPlayersAtStart = \MathBlade\votecount\dataclasses\player::getPlayersAlive($this->playersValidForVotecount);
+      $this->livingPlayersAtStart = \mafiascum\votecounter_extension\dataclasses\player::getPlayersAlive($this->playersValidForVotecount);
     }
 
     public function getLivingPlayersAtStart()
@@ -383,11 +383,11 @@ class VoteCount {
             if ($postNumberToActOn <= $postNumberForComparison)
             {
 
-                $playerToActOn = \MathBlade\votecount\helper\static_functions::get_player_reference($players,$entry->getPlayerToActOn()->getName());
+                $playerToActOn = \mafiascum\votecounter_extension\helper\static_functions::get_player_reference($players,$entry->getPlayerToActOn()->getName());
 
                 if (($actIfAlive && $playerToActOn->isAlive()) || (!$actIfAlive && !$playerToActOn->isAlive()))
                 {
-                  \MathBlade\votecount\dataclasses\Vote::build_unvote_from_vig_or_resurrection($postNumberToActOn,$playerToActOn->getName());
+                  \mafiascum\votecounter_extension\dataclasses\Vote::build_unvote_from_vig_or_resurrection($postNumberToActOn,$playerToActOn->getName());
                   $votecount->doVote($unvote,$isLyloOrMylo);
 
                   if ($actIfAlive)
@@ -478,7 +478,7 @@ class VoteCount {
 
         if (count($killsToSort) > 0)
         {
-          usort($killsToSort, ['MathBlade\votecount\dataclasses\VoteCount', 'killSorter']);
+          usort($killsToSort, ['mafiascum\votecounter_extension\dataclasses\VoteCount', 'killSorter']);
 
           foreach($killsToSort as $kill)
           {
@@ -504,14 +504,14 @@ class VoteCount {
 
 
 
-      \MathBlade\votecount\dataclasses\Vote::sortVotesByPostNumber($votes);
+      \mafiascum\votecounter_extension\dataclasses\Vote::sortVotesByPostNumber($votes);
 
-      $errorsInDayAssign = \MathBlade\votecount\dataclasses\Day::assign_votes_to_day($days,$votes,$lastPostNumber);
+      $errorsInDayAssign = \mafiascum\votecounter_extension\dataclasses\Day::assign_votes_to_day($days,$votes,$lastPostNumber);
       if (count($errorsInDayAssign) > 0)
         return array('Error', $errorsInDayAssign);
 
 
-      \MathBlade\votecount\dataclasses\Day::assign_deaths_to_day($days,$deadList);
+      \mafiascum\votecounter_extension\dataclasses\Day::assign_deaths_to_day($days,$deadList);
       $votecounts = array();
 
       $index = 0;
@@ -528,7 +528,7 @@ class VoteCount {
         foreach($players as $player)
         {
 
-          if ($player->isAlive() && !$player->isTreestump($lastPostOfDay, \MathBlade\votecount\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$lastPostOfDay)))
+          if ($player->isAlive() && !$player->isTreestump($lastPostOfDay, \mafiascum\votecounter_extension\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$lastPostOfDay)))
           {
               $player->setPlayerCurrentlyVoting(null);
               $player->setPostNumberOfVote(null);
@@ -538,7 +538,7 @@ class VoteCount {
         }
         //vc = new VoteCount(days[i].Number, allPlayers, (((int)Math.Floor((double)(allPlayers.numAlive() - treestumpedPlayers - gunnerPlayers) / 2)) + 1), days, isRestCall);
 
-          $votecount = new \MathBlade\votecount\dataclasses\VoteCount($day->getDayNumber(),$players,$replacements,$moderatorList,$day->getFirstPostOfDay(),\MathBlade\votecount\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$day->getFirstPostOfDay()));
+          $votecount = new \mafiascum\votecounter_extension\dataclasses\VoteCount($day->getDayNumber(),$players,$replacements,$moderatorList,$day->getFirstPostOfDay(),\mafiascum\votecounter_extension\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$day->getFirstPostOfDay()));
           //$votecount->updateMajorityCount($day->getFirstPostOfDay());
 
 
@@ -547,11 +547,11 @@ class VoteCount {
           foreach($day->getVotes() as $vote)
           {
             //Handle midday vigs or resurrections.
-            VoteCount::handle_dayvigs_resurrections_and_modkills($votecount,$dayviggedList,$resurrectedList,$modkilledList,$players,$vote->getPostNumber(), \MathBlade\votecount\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$lastPostOfDay));
+            VoteCount::handle_dayvigs_resurrections_and_modkills($votecount,$dayviggedList,$resurrectedList,$modkilledList,$players,$vote->getPostNumber(), \mafiascum\votecounter_extension\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$lastPostOfDay));
 
 
 
-              $votecount->doVote($vote,\MathBlade\votecount\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$vote->getPostNumber()));
+              $votecount->doVote($vote,\mafiascum\votecounter_extension\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$vote->getPostNumber()));
 
 
 
@@ -569,11 +569,11 @@ class VoteCount {
           {
             $nextDay = $days[$day->getDayNumber()];
             //Get vigs that occurred before any votes have happened that day.
-            VoteCount::handle_dayvigs_resurrections_and_modkills($votecount,$dayviggedList,$resurrectedList,$modkilledList,$players,$nextDay->getFirstPostOfDay(),\MathBlade\votecount\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$nextDay->getFirstPostOfDay() -1));
+            VoteCount::handle_dayvigs_resurrections_and_modkills($votecount,$dayviggedList,$resurrectedList,$modkilledList,$players,$nextDay->getFirstPostOfDay(),\mafiascum\votecounter_extension\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$nextDay->getFirstPostOfDay() -1));
 
           }
           else {
-            VoteCount::handle_dayvigs_resurrections_and_modkills($votecount,$dayviggedList,$resurrectedList,$modkilledList,$players,$lastPostNumber,\MathBlade\votecount\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$lastPostNumber));
+            VoteCount::handle_dayvigs_resurrections_and_modkills($votecount,$dayviggedList,$resurrectedList,$modkilledList,$players,$lastPostNumber,\mafiascum\votecounter_extension\dataclasses\lyloOrMylo::IsLyloOrMylo($isLyloOrMyloArray,$lastPostNumber));
           }
 
 
@@ -583,7 +583,7 @@ class VoteCount {
             if ($nightKilledDeath->getNightOfDeath() == $day->getDayNumber())
             {
 
-              $playerToDie = \MathBlade\votecount\helper\static_functions::get_player_reference($players,$nightKilledDeath->getPlayerToDie()->getName());
+              $playerToDie = \mafiascum\votecounter_extension\helper\static_functions::get_player_reference($players,$nightKilledDeath->getPlayerToDie()->getName());
               if ($playerToDie == null)
               {
                  $votecount->addError("Could not find player to night kill. Verify settings and check if " . $nightKilledDeath->getOriginalInput() . " exists.");

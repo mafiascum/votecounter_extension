@@ -1,6 +1,6 @@
 <?php
 
-namespace MathBlade\votecount\helper;
+namespace mafiascum\votecounter_extension\helper;
 
 class static_functions {
 
@@ -120,7 +120,7 @@ class static_functions {
     public static function get_replacement_by_post_number($replacements,$postNumber)
     {
       $replacementToUse = null;
-      usort($replacements,['MathBlade\votecount\dataclasses\replacement', 'compareReplacementsByPostNumber']);
+      usort($replacements,['mafiascum\votecounter_extension\dataclasses\replacement', 'compareReplacementsByPostNumber']);
 
       foreach($replacements as $replacement)
       {
@@ -484,7 +484,7 @@ class static_functions {
       {
         $homeDir = '.';
       }
-      $filePathAndName = $homeDir . '/ext/MathBlade/votecount/helper/' . "words.txt";
+      $filePathAndName = $homeDir . '/ext/mafiascum/votecounter_extension/helper/' . "words.txt";
       $handle = fopen($filePathAndName, "r");
 
       if ($handle) {

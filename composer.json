@@ -1,10 +1,10 @@
 {
-    "name": "MathBlade/votecount",
+    "name": "mafiascum/votecounter_extension",
     "type": "phpbb-extension",
     "description": "Math's Votecounter Extension for phpBB 3.2",
     "version": "0.1.0",
     "time": "2019-01-19",
-    "keywords": ["phpbb", "extension", "MathBlade", "votecount"],
+    "keywords": ["phpbb", "extension", "MathBlade", "votecount", "votecounter"],
     "license": "GPL-2.0",
     "authors": [
         {
@@ -22,7 +22,7 @@
         "phpbb/epv": "dev-master"
     },
     "extra": {
-        "display-name": "MathBlade's VoteCounter Extension",
+        "display-name": "Mafiascum VoteCounter Extension",
         "soft-require": {
             "phpbb/phpbb": "~3.2"
         }
