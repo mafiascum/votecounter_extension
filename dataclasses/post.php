@@ -2,7 +2,7 @@
 
 namespace mafiascum\votecounter_extension\dataclasses;
 
-//require_once($phpbb_root_path . '/ext/mafiascum/votecounter_extension/dataclasses/vote.' . $phpEx);
+require_once(__DIR__ . '/../dataclasses/vote.php');
 use mafiascum\votecounter_extension\dataclasses\Vote as Vote;
 
 class Post {
