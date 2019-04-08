@@ -2,6 +2,18 @@
 
 namespace mafiascum\votecounter_extension\dataclasses;
 
+require_once(__DIR__ . '/../dataclasses/prodtimer.php');
+require_once(__DIR__ . '/../dataclasses/lyloOrMylo.php');
+require_once(__DIR__ . '/../dataclasses/player.php');
+require_once(__DIR__ . '/../dataclasses/replacement.php');
+require_once(__DIR__ . '/../dataclasses/playerModifier.php');
+require_once(__DIR__ . '/../dataclasses/nightkill.php');
+require_once(__DIR__ . '/../dataclasses/resurrection.php');
+require_once(__DIR__ . '/../dataclasses/dayvig.php');
+require_once(__DIR__ . '/../dataclasses/votecount.php');
+require_once(__DIR__ . '/../dataclasses/modkill.php');
+require_once(__DIR__ . '/../helper/static_functions.php');
+
 use mafiascum\votecounter_extension\dataclasses\prodtimer as prodtimer;
 use mafiascum\votecounter_extension\dataclasses\lyloOrMylo as lyloOrMylo;
 use mafiascum\votecounter_extension\dataclasses\player as player;

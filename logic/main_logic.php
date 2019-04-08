@@ -7,6 +7,12 @@ if (!defined('IN_PHPBB'))
 	define('IN_PHPBB', true);
 }
 
+require_once(__DIR__ . '/../dataclasses/post.php');
+require_once(__DIR__ . '/../dataclasses/votecountSettings.php');
+require_once(__DIR__ . '/../dataclasses/day.php');
+require_once(__DIR__ . '/../dataclasses/votecount.php');
+require_once(__DIR__ . '/../dataclasses/wagon.php');
+require_once(__DIR__ . '/../helper/static_functions.php');
 use mafiascum\votecounter_extension\dataclasses\Post as Post;
 use mafiascum\votecounter_extension\dataclasses\votecountSettings as votecountSettings;
 use mafiascum\votecounter_extension\helper\static_functions as static_functions;

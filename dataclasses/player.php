@@ -2,6 +2,7 @@
 
 namespace mafiascum\votecounter_extension\dataclasses;
 
+require_once(__DIR__ . '/../dataclasses/playerModifier.php');
 
 use \mafiascum\votecounter_extension\dataclasses\playerModifier as playerModifier;
 

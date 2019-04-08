@@ -1,6 +1,8 @@
 <?php
 
 namespace mafiascum\votecounter_extension\dataclasses;
+
+require_once(__DIR__ . '/../dataclasses/player.php');
 use mafiascum\votecounter_extension\dataclasses\player as Player;
 
 class Wagon {
