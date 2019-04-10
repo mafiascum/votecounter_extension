@@ -23,11 +23,85 @@ use mafiascum\votecounter_extension\dataclasses\Wagon as Wagon;
 class MainLogic
 {
 
+	static function add_default_groups()
+	{
+  		global $db;
+  		$default_groups = array(
+    		'GUESTS'      => array('', 0, 0),
+    		'REGISTERED'    => array('', 0, 0),
+    		'REGISTERED_COPPA' => array('', 0, 0),
+    		'GLOBAL_MODERATORS' => array('00AA00', 2, 0),
+    		'ADMINISTRATORS'  => array('AA0000', 1, 1),
+    		'BOTS'       => array('9E8DA7', 0, 0),
+    		'NEWLY_REGISTERED'   => array('', 0, 0),
+  		);
+  		$sql = 'SELECT *
+    	FROM ' . GROUPS_TABLE . '
+    	WHERE ' . $db->sql_in_set('group_name', array_keys($default_groups));
+  		$result = $db->sql_query($sql);
+  		while ($row = $db->sql_fetchrow($result))
+  		{
+   		 unset($default_groups[strtoupper($row['group_name'])]);
+  		}
+  		$db->sql_freeresult($result);
+  		$sql_ary = array();
+  		foreach ($default_groups as $name => $data)
+  		{
+    		$sql_ary[] = array(
+      		'group_name'      => (string) $name,
+      		'group_desc'      => '',
+      		'group_desc_uid'    => '',
+      		'group_desc_bitfield'  => '',
+      		'group_type'      => GROUP_SPECIAL,
+      		'group_colour'     => (string) $data[0],
+      		'group_legend'     => (int) $data[1],
+      		'group_founder_manage' => (int) $data[2],
+    		);
+  		}
+  		if (count($sql_ary))
+  		{
+    		$db->sql_multi_insert(GROUPS_TABLE, $sql_ary);
+  		}
+	}
+
+	//Copied from function convert for now.
+	static function get_group_id($group_name)
+	{
+    	global $db, $group_mapping;
+
+    	if (empty($group_mapping))
+    	{
+        	$sql = 'SELECT group_name, group_id
+            	FROM ' . GROUPS_TABLE;
+        	$result = $db->sql_query($sql);
+
+        	$group_mapping = array();
+        	while ($row = $db->sql_fetchrow($result))
+        	{
+            	$group_mapping[strtoupper($row['group_name'])] = (int) $row['group_id'];
+        	}
+        	$db->sql_freeresult($result);
+    	}
+
+    	if (!count($group_mapping))
+    	{
+        	MainLogic::add_default_groups();
+        	return MainLogic::get_group_id($group_name);
+    	}
+
+    	if (isset($group_mapping[strtoupper($group_name)]))
+    	{
+        	return $group_mapping[strtoupper($group_name)];
+    	}
+
+    	return $group_mapping['REGISTERED'];
+	}
+
 	static function get_by_group_name($group_name)
 	{
 		global $db;
 
-		$sql = 'SELECT user_id FROM ' . USER_GROUP_TABLE . ' WHERE group_id = ' . get_group_id($group_name);
+		$sql = 'SELECT user_id FROM ' . USER_GROUP_TABLE . ' WHERE group_id = ' . MainLogic::get_group_id($group_name);
 		$result = $db->sql_query($sql);
 
 		$user_ids = array();
@@ -43,19 +117,19 @@ class MainLogic
 
 	static function get_administrator_user_ids()
 	{
-			return get_by_group_name('administrators');
+			return MainLogic::get_by_group_name('administrators');
 	}
 
 	static function get_moderator_user_ids()
 	{
-		return get_by_group_name('global_moderators');
+		return MainLogic::get_by_group_name('global_moderators');
 
 	}
 
 	static function get_admin_and_moderator_user_ids()
 	{
-			$adminUsers = get_administrator_user_ids();
-			$moderators = get_moderator_user_ids();
+			$adminUsers = MainLogic::get_administrator_user_ids();
+			$moderators = MainLogic::get_moderator_user_ids();
 			return array_merge($adminUsers,$moderators);
 	}
 
@@ -148,7 +222,7 @@ class MainLogic
         {
             $userId = $user->data['user_id'];
 
-            if (!in_array($userId,get_admin_and_moderator_user_ids()))
+            if (!in_array($userId,MainLogic::get_admin_and_moderator_user_ids()))
             {
                 return "[color=red]You are not a valid player in this game and therefore cannot request a votecount. If you are and see this in error, please get the game mod.[/color]";
             }
@@ -186,7 +260,13 @@ class MainLogic
 
             }
             else {
-              $replacement = static_functions::get_player_reference_replacements($replacements,$author,$postNumber);
+							//Get player by postNumber
+              $playerReplacementsLoop = static_functions::get_player_reference_from_vote($players,$replacements,$author,$postNumber);
+							if ($playerReplacementsLoop != null)
+							{
+								$playerReplacementsLoop->addPostNumber($postNumber);
+                $playerReplacementsLoop->setTimeOfLastPost($post->getDate());
+							}
             }
         }
 
