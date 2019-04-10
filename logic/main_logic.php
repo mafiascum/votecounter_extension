@@ -23,6 +23,42 @@ use mafiascum\votecounter_extension\dataclasses\Wagon as Wagon;
 class MainLogic
 {
 
+	static function get_by_group_name($group_name)
+	{
+		global $db;
+
+		$sql = 'SELECT user_id FROM ' . USER_GROUP_TABLE . ' WHERE group_id = ' . get_group_id($group_name);
+		$result = $db->sql_query($sql);
+
+		$user_ids = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$user_ids[] = $row['user_id'];
+		}
+		$db->sql_freeresult($result);
+
+
+		return $user_ids;
+	}
+
+	static function get_administrator_user_ids()
+	{
+			return get_by_group_name('administrators');
+	}
+
+	static function get_moderator_user_ids()
+	{
+		return get_by_group_name('global_moderators');
+
+	}
+
+	static function get_admin_and_moderator_user_ids()
+	{
+			$adminUsers = get_administrator_user_ids();
+			$moderators = get_moderator_user_ids();
+			return array_merge($adminUsers,$moderators);
+	}
+
     public static function get_votecount_string($cache,$homeDir,$db, $user, $request)
     {
 
