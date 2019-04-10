@@ -86,15 +86,18 @@ class static_functions {
         return $lowercaseNameNoUnderscoresNoDashes;
 
     }
+
+
     public static function get_display_name(&$players,&$replacements,$name, $postNumber)
     {
-        $replacement = static_functions::get_player_reference_replacements($replacements, $name, $postNumber);
-        if ($replacement === null)
+        $player = static_functions::get_player_reference_from_vote($players,$replacements,$name,$postNumber);
+
+        if ($player == null)
         {
-            return $name;
+            return 'Player not found';
         }
         else {
-            return $replacement->getDisplayName();
+          return $player->getDisplayName($postNumber);
         }
 
     }
