@@ -27,14 +27,17 @@ class Post {
     $this->post_date = $post_date;
     $this->post_text = $post_text;
     $this->username = $username;
-
+	
     $this->build_vote();
   }
   private function build_vote()
   {
-
-
-
+	//Can't remove quotes/spoilers from settings else votecounter doesn't work.
+	if ($this->getId() > 0)
+	{
+		$this->removeQuotesAndSpoilers();
+	}
+	  
       $this->matchedBoldArray = $this->getUserNameBoldString();
       $this->matchedVoteTagArray = $this->getLatestStringForTag('vote', false);
       $this->matchedUnvoteTagArray = $this->getLatestStringForTag('unvote', true);
@@ -96,6 +99,31 @@ class Post {
 
 
   }
+  
+  private function removeQuotesAndSpoilers()
+  {
+  	
+  	$matchedTagCount = array();
+  	
+  	preg_match_all('/\[' . 'quote(.*?)' .  ']<\/s>(.*?)<e>\[\/' . 'quote' .']/s', $this->getText(), $matchedTagCount);
+  	
+  	foreach($matchedTagCount[0] as $match)
+  	{
+  		
+  		$this->post_text = str_replace($match,'',$this->getText());
+  		
+  	}
+  	
+  	$matchedTagCount = array();
+  	preg_match_all('/\[' . 'spoiler(.*?)' .  ']<\/s>(.*?)<e>\[\/' . 'spoiler' .']/s', $this->getText(), $matchedTagCount);
+  	foreach($matchedTagCount[0] as $match)
+  	{
+  		$this->post_text = str_replace($match,'',$this->getText());
+  	}
+  	
+  	
+
+  }
 
 
   public function getVoteCountSettingsString()
@@ -119,7 +147,7 @@ class Post {
     $matchArray = array();
     $matchedTagCount = array();
 
-    preg_match_all('/\[' . $openTagName .  ']<\/s>(.*)<e>\[\/' . $closedTagName .']/s', $this->getText(), $matchedTagCount);
+	preg_match_all('/\[' . $openTagName .  ']<\/s>(.*?)<e>\[\/' . $closedTagName .']/s', $this->getText(), $matchedTagCount);
 
 
 
@@ -135,13 +163,18 @@ class Post {
         $matchArray = array();
         array_push($matchArray,$tagElement);
 
-
-
+		
         $position = strpos($this->getText(),'[' . $openTagName .']</s>' . $tagElement . '<e>[/'. $closedTagName . ']');
-
+		
+		//If a name is not provided, this is an unvote.
+		if (!isset($tagElement) || trim($tagElement) === '')
+		{
+			$isUnvote = true;
+		}
         array_push($matchArray,$position);
         array_push($matchArray,$isUnvote);
-
+		
+		
         return $matchArray;
 
       }
@@ -159,9 +192,7 @@ class Post {
 
 
     preg_match_all('/\[b]<\/s>(.*)<e>\[\/b]/', $this->getText(), $matchedBold);
-    //$this->matchedBoldArray = $matchedBold;
-
-    //$boldTextArray = $post->getMatchesBold();
+   
     $boldMatchDebugString = '';
 
     $boldMatchedText;
