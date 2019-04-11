@@ -27,14 +27,17 @@ class Post {
     $this->post_date = $post_date;
     $this->post_text = $post_text;
     $this->username = $username;
-	//echo "POST TEXT: " . $post_text . "<br/>";
+	
     $this->build_vote();
   }
   private function build_vote()
   {
-
-
-
+	//Can't remove quotes/spoilers from settings else votecounter doesn't work.
+	if ($this->getId() > 0)
+	{
+		$this->removeQuotesAndSpoilers();
+	}
+	  
       $this->matchedBoldArray = $this->getUserNameBoldString();
       $this->matchedVoteTagArray = $this->getLatestStringForTag('vote', false);
       $this->matchedUnvoteTagArray = $this->getLatestStringForTag('unvote', true);
@@ -94,6 +97,31 @@ class Post {
       }
 
 
+
+  }
+  
+  private function removeQuotesAndSpoilers()
+  {
+  	
+  	$matchedTagCount = array();
+  	
+  	preg_match_all('/\[' . 'quote(.*?)' .  ']<\/s>(.*?)<e>\[\/' . 'quote' .']/s', $this->getText(), $matchedTagCount);
+  	
+  	foreach($matchedTagCount[0] as $match)
+  	{
+  		
+  		$this->post_text = str_replace($match,'',$this->getText());
+  		
+  	}
+  	
+  	$matchedTagCount = array();
+  	preg_match_all('/\[' . 'spoiler(.*?)' .  ']<\/s>(.*?)<e>\[\/' . 'spoiler' .']/s', $this->getText(), $matchedTagCount);
+  	foreach($matchedTagCount[0] as $match)
+  	{
+  		$this->post_text = str_replace($match,'',$this->getText());
+  	}
+  	
+  	
 
   }
 
