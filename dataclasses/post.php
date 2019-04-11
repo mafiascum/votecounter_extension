@@ -27,7 +27,7 @@ class Post {
     $this->post_date = $post_date;
     $this->post_text = $post_text;
     $this->username = $username;
-
+	//echo "POST TEXT: " . $post_text . "<br/>";
     $this->build_vote();
   }
   private function build_vote()
@@ -119,7 +119,7 @@ class Post {
     $matchArray = array();
     $matchedTagCount = array();
 
-    preg_match_all('/\[' . $openTagName .  ']<\/s>(.*)<e>\[\/' . $closedTagName .']/s', $this->getText(), $matchedTagCount);
+	preg_match_all('/\[' . $openTagName .  ']<\/s>(.*?)<e>\[\/' . $closedTagName .']/s', $this->getText(), $matchedTagCount);
 
 
 
@@ -135,13 +135,18 @@ class Post {
         $matchArray = array();
         array_push($matchArray,$tagElement);
 
-
-
+		
         $position = strpos($this->getText(),'[' . $openTagName .']</s>' . $tagElement . '<e>[/'. $closedTagName . ']');
-
+		
+		//If a name is not provided, this is an unvote.
+		if (!isset($tagElement) || trim($tagElement) === '')
+		{
+			$isUnvote = true;
+		}
         array_push($matchArray,$position);
         array_push($matchArray,$isUnvote);
-
+		
+		
         return $matchArray;
 
       }
@@ -159,9 +164,7 @@ class Post {
 
 
     preg_match_all('/\[b]<\/s>(.*)<e>\[\/b]/', $this->getText(), $matchedBold);
-    //$this->matchedBoldArray = $matchedBold;
-
-    //$boldTextArray = $post->getMatchesBold();
+   
     $boldMatchDebugString = '';
 
     $boldMatchedText;
