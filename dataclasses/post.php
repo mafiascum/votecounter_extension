@@ -147,6 +147,7 @@ class Post {
     $matchArray = array();
     $matchedTagCount = array();
 
+	
 	preg_match_all('/\[' . $openTagName .  ']<\/s>(.*?)<e>\[\/' . $closedTagName .']/s', $this->getText(), $matchedTagCount);
 
 
@@ -190,8 +191,8 @@ class Post {
     $voteNoColonElement='';
 
 
-
-    preg_match_all('/\[b]<\/s>(.*)<e>\[\/b]/', $this->getText(), $matchedBold);
+	
+    preg_match_all('/\[b]<\/s>(.*?)<e>\[\/b]/s', $this->getText(), $matchedBold);
    
     $boldMatchDebugString = '';
 
@@ -202,6 +203,7 @@ class Post {
 
     foreach(array_reverse($matchedBold[1]) as $boldMatch)
     {
+    
         $VoteColonElement ='';
         $UnvoteColonElement ='';
         $VoteNoColonElement ='';
@@ -242,22 +244,25 @@ class Post {
 
         }
 
-
+	
         if ($isUnvote == false)
         {
-
-          if (strlen($VoteColonElement > 0) && !(strlen($VoteNoColonElement) > 0))
+		   
+          if (strlen($VoteColonElement) > 0 && !(strlen($VoteNoColonElement) > 0))
           {
+          
               $hasColon = true;
               $boldMatchedText = $VoteColonElement;
           }
-          else if(!strlen($VoteColonElement > 0) && (strlen($VoteNoColonElement) > 0))
+          else if(!strlen($VoteColonElement) > 0 && (strlen($VoteNoColonElement) > 0))
           {
+          	 
               $hasColon = false;
               $boldMatchedText = $VoteNoColonElement;
           }
-          else if (strlen($VoteColonElement > 0) && (strlen($VoteNoColonElement) > 0))
+          else if (strlen($VoteColonElement) > 0 && (strlen($VoteNoColonElement) > 0))
           {
+          	 
               $colonLoc = strpos($boldMatch, $VoteColonElement);
               $noColonLoc = strpos($boldMatch,$VoteNoColonElement);
               if ($colonLoc > $noColonLoc)
@@ -270,21 +275,22 @@ class Post {
                 $boldMatchedText = $VoteNoColonElement;
               }
           }
+         
 
         }
         else {
 
-          if (strlen($UnvoteColonElement > 0) && !(strlen($UnvoteNoColonElement) > 0))
+          if (strlen($UnvoteColonElement) > 0 && !(strlen($UnvoteNoColonElement) > 0))
           {
               $hasColon = true;
               $boldMatchedText = $UnvoteColonElement;
           }
-          else if(!strlen($UnvoteColonElement > 0) && (strlen($UnvoteNoColonElement) > 0))
+          else if(!strlen($UnvoteColonElement) > 0 && (strlen($UnvoteNoColonElement) > 0))
           {
               $hasColon = false;
               $boldMatchedText = $UnvoteNoColonElement;
           }
-          else if (strlen($UnvoteColonElement > 0) && (strlen($UnvoteNoColonElement) > 0))
+          else if (strlen($UnvoteColonElement) > 0 && (strlen($UnvoteNoColonElement) > 0))
           {
               $colonLoc = strpos($boldMatch, $UnvoteColonElement);
               $noColonLoc = strpos($boldMatch,$UnvoteNoColonElement);
@@ -300,7 +306,7 @@ class Post {
           }
         }
 
-
+		
         if (strlen($boldMatchedText) > 0)
         {
 
@@ -308,13 +314,14 @@ class Post {
 
 
           $matchArray = array();
-          array_push($matchArray,$boldMatchedText);
-          $voteString = 'VOTE' . ($hasColon ? ':' : '' . ' ' );
-          //echo '[b]</s>' . $voteString . $boldMatchedText . '<e>[/b]';
+          array_push($matchArray,trim($boldMatchedText));
+         
+         
 
+		  
+          $position = stripos($this->getText(),'[b]</s>' . $boldMatch . '<e>[/b]');
 
-          $position = strpos($this->getText(),'[b]</s>' . $voteString . $boldMatchedText . '<e>[/b]');
-
+		 
           array_push($matchArray,$position);
           array_push($matchArray,$isUnvote);
 
