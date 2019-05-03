@@ -90,6 +90,7 @@ class static_functions {
 
     public static function get_display_name(&$players,&$replacements,$name, $postNumber)
     {
+    	
         $player = static_functions::get_player_reference_from_vote($players,$replacements,$name,$postNumber);
 
         if ($player == null)
@@ -175,7 +176,7 @@ class static_functions {
 
         }
         else {
-
+			
           $validPlayerReplacements = static_functions::get_all_valid_replacements_for_post_number($players,$postNumber);
 
           foreach($validPlayerReplacements as $validPlayerReplacement)
@@ -359,7 +360,7 @@ class static_functions {
             }
           }
 
-
+		  
           //Check levenshtein distance
           $names = array();
           foreach($players as $player)
@@ -388,20 +389,20 @@ class static_functions {
               }
 
           }
-
+	    
           $closestName = null;
           $closestDist = -1;
           $closestArray = array();
 
           $shortest = -1;
-
+		
         // loop through words to find the closest
         foreach ($names as $nameInList) {
-
+			
             // calculate the distance between the input word,
             // and the current word
             $lev = levenshtein($name, $nameInList);
-
+			
             // check for an exact match
             if ($lev == 0) {
 
@@ -422,15 +423,12 @@ class static_functions {
                 $closestArray = null;
                 $shortest = $lev;
             }
-            else if ($lev === $shortest)
+            
+            if ($lev === $shortest)
             {
                 if ($closestArray == null)
                 {
                     $closestArray = array();
-                }
-                if (!in_array($nameInList,$closestArray))
-                {
-                  array_push($closestArray, $nameInList);
                 }
                 if (!in_array($closestName, $closestArray))
                 {
@@ -439,12 +437,13 @@ class static_functions {
 
             }
         }
-
+        
+       
         //Required in case nickname is the closest string.
-        if ($shortest == 0) {
+        if ($shortest == 0 && $closestDist > -1) {
 
             return static_functions::get_player_reference_from_vote($players,$replacements,$closestName,$postNumber);
-        } else if ($closestArray == null){
+        } else if ($closestArray == null && $closestDist > -1){
 
             return static_functions::get_player_reference_from_vote($players,$replacements,$closestName,$postNumber);
         } else if (is_array($closestArray) && count($closestArray) == 1)
@@ -453,6 +452,16 @@ class static_functions {
           return static_functions::get_player_reference_from_vote($players,$replacements,$closestArray[0],$postNumber);
         }
         else {
+        	if ($closestArray != null && count($closestArray) > 0)
+        	{
+        		$errorString = " Could not determine player voted for between: " ;
+        		$errorString = $errorString . implode(",",$closestArray);
+        		
+        	}
+        	else {
+        		
+        	}
+        	
           // Blank for now til come up with any other formatting.
         }
 
